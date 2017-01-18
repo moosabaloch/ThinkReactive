@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
         tv = (TextView) findViewById(R.id.textView);
 
 //"one", "two", "three", "four", "five"
+
+
         Observable.from(new Future<String>() {
             @Override
             public boolean cancel(boolean mayInterruptIfRunning) {
@@ -47,9 +49,7 @@ public class MainActivity extends AppCompatActivity {
             public String get() throws InterruptedException, ExecutionException {
                 String a = "asdfas";
                 AppLogs.logd("Network Req Start");
-                Thread.sleep(5000);
                 AppLogs.logd("Network End" + a);
-                tv.setText(a);
                 return a;
             }
 
