@@ -9,21 +9,19 @@ import java.util.ArrayList;
 
 public class Data {
 
-    public static ArrayList<User> usersList(){
+    public static ArrayList<User> usersList() {
         ArrayList<User> users = new ArrayList<>();
-        users.add(new User(User.ADMIN,"Muhammad Moosa", "moosa.bh@gmail.com" ));
-        users.add(new User(User.GUEST,"Kamran Ali", "kamran@gmail.com" ));
-        users.add(new User(User.MODERATOR,"Muhammad Imran", "imran@gmail.com" ));
-        users.add(new User(User.ADMIN,"Muhammad Qasim", "qasim@gmail.com" ));
-        users.add(new User(User.MODERATOR,"Babar Raza", "inter@gmail.com" ));
-        users.add(new User(User.GUEST,"Umer Nawaz", "dashing@gmail.com" ));
-        users.add(new User(User.ADMIN,"Danish Soomro", "soomro@gmail.com" ));
-        users.add(new User(User.MODERATOR,"Ali Rana", "alir@gmail.com" ));
-        users.add(new User(User.ADMIN,"Faiz Rehman", "faiz@gmail.com" ));
+        users.add(new User(User.ADMIN, "Muhammad Moosa", "moosa.bh@gmail.com"));
+        users.add(new User(User.GUEST, "Kamran Ali", "kamran@gmail.com"));
+        users.add(new User(User.MODERATOR, "Muhammad Imran", "imran@gmail.com"));
+        users.add(new User(User.ADMIN, "Muhammad Qasim", "qasim@gmail.com"));
+        users.add(new User(User.MODERATOR, "Babar Raza", "inter@gmail.com"));
+        users.add(new User(User.GUEST, "Umer Nawaz", "dashing@gmail.com"));
+        users.add(new User(User.ADMIN, "Danish Soomro", "soomro@gmail.com"));
+        users.add(new User(User.MODERATOR, "Ali Rana", "alir@gmail.com"));
+        users.add(new User(User.ADMIN, "Faiz Rehman", "faiz@gmail.com"));
         return users;
     }
-
-
 
 
     public static ArrayList<Integer> iterable(int length) {
@@ -36,6 +34,6 @@ public class Data {
     }
 
     public static Integer[] primitive(int length) {
-       return (Integer[]) iterable(length).toArray();
+        return (Integer[]) iterable(length).toArray();
     }
 }

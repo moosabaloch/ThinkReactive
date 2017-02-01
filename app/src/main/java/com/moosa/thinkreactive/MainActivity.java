@@ -2,29 +2,27 @@ package com.moosa.thinkreactive;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.DragEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
+import com.moosa.thinkreactive.model.users.User;
+import com.moosa.thinkreactive.network.UserService;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Cancellable;
-import io.reactivex.functions.Predicate;
-import io.reactivex.schedulers.Schedulers;
+import io.reactivex.functions.Consumer;
 
 public class MainActivity extends AppCompatActivity {
     private TextView tv;
     private Button button;
     private AutoCompleteTextView completeTextView;
     private View view;
+    private ArrayList<User> userArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,54 +32,45 @@ public class MainActivity extends AppCompatActivity {
         button = (Button) findViewById(R.id.click_button);
         completeTextView = (AutoCompleteTextView) findViewById(R.id.autoComplete);
         view = findViewById(R.id.gesture);
-
-        //conditionalOperations();
-        //userFiltration();
-        //iterable();
-        // exampleAmb();
-        //scan();
-        try {
-            //autoChange();
-            autoChange();
-            exampleAmb();
-            gestureRecognizer();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void gestureRecognizer() {
-        Observable.create(new ObservableOnSubscribe<MotionEvent>() {
+        userArrayList = new ArrayList<>();
+        UserService userService = new UserService();
+        userService.getUsersSortedByName().subscribe(new Consumer<List<User>>() {
             @Override
-            public void subscribe(ObservableEmitter<MotionEvent> e) throws Exception {
-                View.OnTouchListener touchListener =  new View.OnTouchListener(){
+            public void accept(List<User> users) throws Exception {
+                  for (User user : users) {
+                AppLogs.logd("User name is : " + user.getName());
+                AppLogs.logd("User email is : " + user.getEmail());
+                AppLogs.logd("User id is : " + user.getId());
+                AppLogs.logd("User website is : " + user.getWebsite());
+                AppLogs.logd("User Address is : " + user.getAddress().toString());
+                AppLogs.logd("User Company is : " + user.getCompany().toString());
+                AppLogs.logd("----------------------------------------------------");
+                }
 
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        e.onNext(event);
-                        return false;
-                    }
-                };
-                View.OnDragListener dragListener = new View.OnDragListener() {
-                    @Override
-                    public boolean onDrag(View v, DragEvent event) {
-                        AppLogs.logd("");
-                        return true;
-                    }
-                };
-                view.setOnDragListener(dragListener);
             }
-        }).subscribe(new Observer<MotionEvent>() {
+        });
+
+
+        /*
+        userService.getUsersSortedByName().subscribe(new Observer<User>() {
             @Override
             public void onSubscribe(Disposable d) {
 
             }
 
             @Override
-            public void onNext(MotionEvent motionEvent) {
-                AppLogs.logd("Motion Event: X->"+motionEvent.getAxisValue(MotionEvent.AXIS_X)+"| Y->"+motionEvent.getAxisValue(MotionEvent.AXIS_X)+"| ");
+            public void onNext(User user) {
+                //userArrayList.add(users);
+               // AppLogs.logd("Users Size is : " + userArrayList.size());
+              //  for (User user : userArrayList) {
+                    AppLogs.logd("User name is : " + user.getName());
+                    AppLogs.logd("User email is : " + user.getEmail());
+                    AppLogs.logd("User id is : " + user.getId());
+                    AppLogs.logd("User website is : " + user.getWebsite());
+                    AppLogs.logd("User Address is : " + user.getAddress().toString());
+                    AppLogs.logd("User Company is : " + user.getCompany().toString());
+                    AppLogs.logd("----------------------------------------------------");
+                //}
             }
 
             @Override
@@ -91,186 +80,96 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onComplete() {
-
+                AppLogs.logd("Observable Completed");
             }
         });
+*/
     }
 
-    private void autoChange() throws Exception {
-        UserList users = new UserList();
-        Observable.create(users)
-                .observeOn(Schedulers.io())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Observer<User>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(User user) {
-                        AppLogs.logd("New User Added: " + user.toString());
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-
-        final int[] i = {0};
-
-        Observable.fromIterable(Data.usersList())
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .subscribe(new Observer<User>() {
-                    @Override
-                    public void onSubscribe(Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onNext(User user) {
-                        try {
-                            i[0]++;
-                            users.add(new User(0, "New User" + i[0], "----"));
-                            Thread.sleep(1000);
-                        } catch (Exception ecx) {
-                            AppLogs.logd("Error Adding User ");
-                        }
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });
-    }
+/*
 
 
-    public void exampleAmb() {
-//        createTextChangeObservable().observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<String>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                        AppLogs.logd("onSubscribe(Disposable d);");
-//                    }
-//
-//                    @Override
-//                    public void onNext(String s) {
-//                        AppLogs.logd("New String is: "+s);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//                        AppLogs.logd("onComplete();");
-//
-//                    }
-//                });
-//        Observable<User> userObservable = Observable.fromIterable(Data.usersList())
-//                .sorted(new Comparator<User>() {
-//                    @Override
-//                    public int compare(User o1, User o2) {
-//                        return (o1.getName().compareTo(o2.getName()));
-//                    }
-//                });
-//
-//
-//        userObservable.subscribe(new Observer<User>() {
-//            @Override
-//            public void onSubscribe(Disposable d) {
-//                AppLogs.logd("onSubscribe();");
-//            }
-//
-//            @Override
-//            public void onNext(User user) {
-//                AppLogs.logd("onNext();");
-//                AppLogs.logd("Print: " + user.toString());
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                AppLogs.logd("onError();");
-//            }
-//
-//            @Override
-//            public void onComplete() {
-//                AppLogs.logd("onComplete();");
-//            }
-//        });
-//
+ try {
+            GetUser userRequest = GetUser.retrofit.create(GetUser.class);
+            // To call is as a synchronous request,
+            // just call execute or call enqueue to make an asynchronous request.
+            userRequest.getAllUsers().enqueue(this);
 
-    }
 
-    //1
-    private Observable<String> createTextChangeObservable() {
-        //2
-        Observable<String> textChangeObservable = Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
-                //3
-                final TextWatcher watcher = new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
+            userRequest.getUserById(4).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    AppLogs.logd("Posting User:" + response.body().toString());
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                    }
+                }
 
-                    //4
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        emitter.onNext(s.toString());
-                    }
-                };
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
 
-                //5
-                completeTextView.addTextChangedListener(watcher);
+                }
+            });
 
-                emitter.setDisposable(new Disposable() {
-                    @Override
-                    public void dispose() {
-
-                    }
-
-                    @Override
-                    public boolean isDisposed() {
-                        return false;
-                    }
-                });
-                //6
-
-                emitter.setCancellable(new Cancellable() {
-                    @Override
-                    public void cancel() throws Exception {
-                        completeTextView.removeTextChangedListener(watcher);
-                    }
-                });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    @Override
+    public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+        if (response.isSuccessful()) {
+            userArrayList.addAll(response.body());
+            AppLogs.logd("Users Size is : " + userArrayList.size());
+            for (User user : userArrayList) {
+                AppLogs.logd("User name is : " + user.getName());
+                AppLogs.logd("User email is : " + user.getEmail());
+                AppLogs.logd("User id is : " + user.getId());
+                AppLogs.logd("User website is : " + user.getWebsite());
+                AppLogs.logd("User Address is : " + user.getAddress().toString());
+                AppLogs.logd("User Company is : " + user.getCompany().toString());
+                AppLogs.logd("----------------------------------------------------");
             }
-        });
-
-        // 7
-        return textChangeObservable.filter(new Predicate<String>() {
-            @Override
-            public boolean test(String s) throws Exception {
-                return s.length() > 2;
-            }
-        });
+        }
     }
+
+    @Override
+    public void onFailure(Call<List<User>> call, Throwable t) {
+
+    }
+
+* */
+
+
+
+
+
+    /*
+    TEMP CODE
+      User u = response.body();
+                  try {
+                      JSONObject jsonObject = new JSONObject();
+                      jsonObject.put("name", u.getName());
+                      jsonObject.put("email",u.getEmail());
+                      jsonObject.put("id",u.getId());
+                      jsonObject.put("phone",u.getPhone());
+                      JSONObject newJson = new JSONObject();
+                      newJson.put("test1",jsonObject);
+                      PostJSON json = PostJSON.retrofit.create(PostJSON.class);
+                      json.postJson(jsonObject).enqueue(new Callback<JSONObject>() {
+                          @Override
+                          public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {
+                              AppLogs.logd("onResponse(JSON)");
+                              AppLogs.logd("code:"+response.code());
+                              AppLogs.logd("Raw:"+response.raw().toString());
+                              AppLogs.logd("isTrue();"+response.isSuccessful());
+                              AppLogs.logd("Body();"+response.body().toString());
+                          }
+
+                          @Override
+                          public void onFailure(Call<JSONObject> call, Throwable t) {
+                              AppLogs.logd("onError(JSON)");
+                              t.printStackTrace();
+                          }
+                      });
+                  }catch (Exception ex){
+                      AppLogs.logd("Error ");
+                  }
+    * */
 }

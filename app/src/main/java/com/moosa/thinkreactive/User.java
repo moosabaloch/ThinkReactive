@@ -1,15 +1,11 @@
 package com.moosa.thinkreactive;
 
-import java.util.Observer;
-
-import rx.Observable;
-
 /**
  * Created by Moosa on 19/01/2017.
  * moosa.bh@gmail.com
  */
 
-public class User extends io.reactivex.Observable{
+public class User extends io.reactivex.Observable {
     public static final int ADMIN = 0;
     public static final int MODERATOR = 2;
     public static final int GUEST = 1;

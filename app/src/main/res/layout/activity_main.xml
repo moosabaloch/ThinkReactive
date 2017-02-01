@@ -22,15 +22,17 @@
         android:id="@+id/autoComplete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/click_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
     <View
         android:id="@+id/gesture"
         android:background="@color/colorAccent"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 
 </LinearLayout>
